@@ -1,0 +1,153 @@
+openapi: 3.0.0
+
+info:
+  description: leaderboard external api
+  title: External API
+  version: 1.0.0
+
+paths:
+  /api/v1/getrank:
+    post:
+      description: get rank by player id
+      operationId: getRank
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetRankRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/GetRankResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        default:
+          $ref: "#/components/responses/GenericErrorResponse"
+      security:
+        - jwtsa: []
+      summary: get player rank usages
+      tags:
+        - api-v1
+  /api/v1/list:
+    post:
+      description: list leaderboard limit 1000 by paging
+      operationId: listLeaderboard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListLeaderboardRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/ListLeaderboardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        default:
+          $ref: "#/components/responses/GenericErrorResponse"
+      security:
+        - jwtsa: []
+      summary: list leaderboard
+      tags:
+        - api-v1
+components:
+  responses:
+    GenericErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+      description: Generic error
+
+    GetRankResponse:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GetRankResult"
+      description: get rank response object
+
+    ListLeaderboardResponse:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ListLeaderboardResult"
+      description: list leaderboard response object
+
+    UnauthorizedErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+      description: Unauthorized
+  schemas:
+    EmptyRequest:
+      description: empty request.
+      properties:
+        debug:
+          type: boolean
+          example: true
+
+    GetRankRequest:
+      description: get rank request
+      required:
+        - player_id
+      properties:
+        player_id:
+          example: 1234567
+          type: integer
+          format: int64
+
+    ListLeaderboardRequest:
+      description: list leaderboard request
+      properties:
+        page:
+          example: 1
+          type: integer
+        page_size:
+          example: 100
+          type: integer
+
+    GetRankResult:
+      description: get rank result
+      properties:
+        rank:
+          example: 1
+          type: integer
+        update_at:
+          example: 1234567
+          type: integer
+          format: int64
+
+    RankInfo:
+      description: rank info
+      properties:
+        player_id:
+          example: 1234567
+          type: integer
+          format: int64
+        rank:
+          example: 1
+          type: integer
+
+    ListLeaderboardResult:
+      description: list leaderboard result
+      properties:
+        ranks:
+          items:
+            $ref: "#/components/schemas/RankInfo"
+          type: array
+
+    Error:
+      properties:
+        Error:
+          properties:
+            Message:
+              description: The error message.
+              type: string
+          type: object
+      type: object
+
+  securitySchemes:
+    jwtsa:
+      bearerFormat: JWT-SA
+      description: A JWT SA token issued to this service
+      scheme: bearer
+      type: http

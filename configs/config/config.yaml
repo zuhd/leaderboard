@@ -1,0 +1,8 @@
+name: leaderboard
+owner: hefehoo@gmail.com
+
+module:
+  leaderboard:
+    listen: 127.0.0.1
+    port: 9090
+    database: $secret.mysql.source
