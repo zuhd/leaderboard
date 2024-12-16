@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS `rank` (
+`player_id` BIGINT NOT NULL,
+`player_rank` INT(10) NOT NULL DEFAULT 0,
+`update_time` BIGINT NOT NULL,
+PRIMARY KEY (`player_id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;

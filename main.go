@@ -1,9 +1,11 @@
-package leaderboard
+package main
 
-import "leaderboard/internal/utils"
+import (
+	"leaderboard/internal/service"
+)
 
 func main() {
-	s, err := utils.NewService()
+	s, err := service.NewService()
 	if err != nil {
 		panic("failed to new service")
 	}

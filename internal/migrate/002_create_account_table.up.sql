@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS `account` (
+`player_id` BIGINT NOT NULL,
+`username` VARCHAR(32) NOT NULL,
+`password` VARCHAR(32) NOT NULL,
+ PRIMARY KEY (`player_id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;

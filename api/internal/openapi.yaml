@@ -1,9 +1,193 @@
-openapi: 3.0.3
+openapi: 3.0.0
+
 info:
-  title: Title
-  description: Title
+  description: leaderboard internal api
+  title: Internal API
   version: 1.0.0
-servers:
-  - url: 'https'
+
 paths:
-  
+  /api/v1/getscore:
+    post:
+      description: get player score
+      operationId: getScore
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetScoreRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/GetScoreResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        default:
+          $ref: "#/components/responses/GenericErrorResponse"
+      security:
+        - jwtsa: [ ]
+      summary: add player score usages
+      tags:
+        - api-v1
+  /api/v1/addscore:
+    post:
+      description: add player score
+      operationId: addScore
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddScoreRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/AddScoreResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        default:
+          $ref: "#/components/responses/GenericErrorResponse"
+      security:
+        - jwtsa: []
+      summary: add player score usages
+      tags:
+        - api-v1
+  /api/v1/resetscore:
+    post:
+      description: reset player score
+      operationId: resetScore
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetScoreRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/ResetScoreResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedErrorResponse"
+        default:
+          $ref: "#/components/responses/GenericErrorResponse"
+      security:
+        - jwtsa: []
+      summary: reset player score
+      tags:
+        - api-v1
+components:
+  responses:
+    GenericErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+      description: Generic error
+
+    GetScoreResponse:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GetScoreResult"
+      description: get score response object
+
+    AddScoreResponse:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AddScoreResult"
+      description: add score response object
+
+    ResetScoreResponse:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResetScoreResult"
+      description: reset score response object
+
+    UnauthorizedErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+      description: Unauthorized
+  schemas:
+    EmptyRequest:
+      description: empty request.
+      properties:
+        debug:
+          type: boolean
+          example: true
+
+    GetScoreRequest:
+      description: get score request
+      required:
+        - player_id
+      properties:
+        player_id:
+          example: 1234567
+          type: integer
+          format: int64
+
+    AddScoreRequest:
+      description: add score request
+      required:
+        - player_id
+        - score
+      properties:
+        player_id:
+          example: 1234567
+          type: integer
+          format: int64
+        score:
+          example: 100
+          type: integer
+          format: int64
+
+    ResetScoreRequest:
+      description: reset score request, reset all while -1
+      required:
+        - player_id
+      properties:
+        player_id:
+          example: 1234567
+          type: integer
+          format: int64
+
+    GetScoreResult:
+      description: get score result
+      properties:
+        score:
+          example: 1
+          type: integer
+
+    AddScoreResult:
+      description: add score result
+      properties:
+        result:
+          type: string
+          enum:
+            - success
+            - fail
+          example: success
+
+    ResetScoreResult:
+      description: reset score result
+      properties:
+        result:
+          type: string
+          enum:
+            - success
+            - fail
+          example: success
+
+    Error:
+      properties:
+        Error:
+          properties:
+            Message:
+              description: The error message.
+              type: string
+          type: object
+      type: object
+
+  securitySchemes:
+    jwtsa:
+      bearerFormat: JWT-SA
+      description: A JWT SA token issued to this service
+      scheme: bearer
+      type: http

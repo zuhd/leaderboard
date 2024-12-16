@@ -27,6 +27,7 @@ func GetLogger() {
 	)
 	logger := zap.New(newCore, zap.AddCaller())
 	zap.ReplaceGlobals(logger)
+	zap.S()
 }
 
 // GetEncoder 自定义的Encoder
